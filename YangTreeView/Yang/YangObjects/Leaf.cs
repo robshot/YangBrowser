@@ -15,7 +15,7 @@ namespace YangTreeView.Yang.YangObjects
 
         public string Type { get; set; }
 
-        public bool IsList { get; set; }
+        internal bool IsList { get; set; }
 
         public LeafRef LeafRef { get; set; }
 

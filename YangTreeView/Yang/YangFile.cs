@@ -17,9 +17,11 @@ namespace YangTreeView.Yang
 
         public string Prefix { get; set; }
 
-        public bool IsSubmodule { get; set; }
+        public string Description { get; set; }
 
-        public bool IsResolved { get; set; }
+        internal bool IsSubmodule { get; set; }
+
+        internal bool IsResolved { get; set; }
 
         public BelongsTo BelongsTo { get; set; }
 
@@ -39,6 +41,7 @@ namespace YangTreeView.Yang
 
         public YangFile()
         {
+            Description = String.Empty;
             IsSubmodule = false;
             BelongsTo = new BelongsTo();
             Includes = new List<string>();

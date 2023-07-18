@@ -95,6 +95,33 @@ namespace YangTreeView.Yang
             }
 
             Root = root;
+        }        
+
+        public void FindNode(string path)
+        {
+            string[] pathSplitted = path.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+            var grouping = Root.Groupings.FirstOrDefault(x => x.Name == pathSplitted[0]);
+            if (grouping == null)
+            {
+                return;
+            }
+
+            var container = grouping.Containers.FirstOrDefault(x => x.Name == pathSplitted[1]);
+            if (container != null)
+            {
+                return;
+            }
+
+            var leaf = grouping.Leafs.FirstOrDefault(x => x.Name == pathSplitted[1]);
+            if (leaf != null)
+            {
+                return;
+            }
+        }
+
+        private void FindNode(string partPath, Container container)
+        {
+
         }
 
         private void FillRoot(Tree root)
@@ -532,6 +559,11 @@ namespace YangTreeView.Yang
         {
             foreach (var file in files)
             {
+                if (!file.EndsWith(".yang"))
+                {
+                    continue;
+                }
+
                 ImportFiles.AddRange(ParseYangFile(file));
             }
 
@@ -683,7 +715,7 @@ namespace YangTreeView.Yang
                         break;
 
                     case string s when s.StartsWith("description"):
-                        Parsing.GetMultilineText(file, i, out int descriptionIndex);
+                        yangFile.Description = Parsing.GetMultilineText(file, i, out int descriptionIndex);
                         i = descriptionIndex;
                         break;
 

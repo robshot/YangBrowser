@@ -39,6 +39,10 @@
             label1 = new Label();
             rtbParsedFiles = new RichTextBox();
             treeViewTabPage = new TabPage();
+            pg = new PropertyGrid();
+            tbType = new TextBox();
+            lblType = new Label();
+            tbPgValue = new TextBox();
             rtbResponse = new RichTextBox();
             button2 = new Button();
             tabPage1 = new TabPage();
@@ -59,10 +63,11 @@
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             button1.Location = new Point(7, 36);
             button1.Margin = new Padding(3, 2, 3, 2);
             button1.Name = "button1";
-            button1.Size = new Size(968, 30);
+            button1.Size = new Size(779, 30);
             button1.TabIndex = 0;
             button1.Text = "Parse";
             button1.UseVisualStyleBackColor = true;
@@ -74,8 +79,9 @@
             treeView1.Location = new Point(0, 0);
             treeView1.Margin = new Padding(2);
             treeView1.Name = "treeView1";
-            treeView1.Size = new Size(475, 736);
+            treeView1.Size = new Size(475, 731);
             treeView1.TabIndex = 1;
+            treeView1.AfterSelect += treeView1_AfterSelect;
             treeView1.NodeMouseClick += treeView1_NodeMouseClick;
             // 
             // tbPath
@@ -84,19 +90,21 @@
             tbPath.Location = new Point(5, 5);
             tbPath.Margin = new Padding(2);
             tbPath.Name = "tbPath";
-            tbPath.Size = new Size(975, 27);
+            tbPath.Size = new Size(781, 27);
             tbPath.TabIndex = 2;
             tbPath.Text = "C:\\Users\\[User]\\Documents\\YangFiles";
             // 
             // textBox2
             // 
+            textBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox2.BorderStyle = BorderStyle.None;
             textBox2.Cursor = Cursors.IBeam;
             textBox2.Location = new Point(479, 5);
             textBox2.Margin = new Padding(2);
+            textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ReadOnly = true;
-            textBox2.Size = new Size(379, 20);
+            textBox2.Size = new Size(306, 27);
             textBox2.TabIndex = 4;
             textBox2.Text = "No Path";
             // 
@@ -106,10 +114,10 @@
             tabControl1.Controls.Add(filesTabPage);
             tabControl1.Controls.Add(treeViewTabPage);
             tabControl1.Controls.Add(tabPage1);
-            tabControl1.Location = new Point(1, 0);
+            tabControl1.Location = new Point(1, -1);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(993, 769);
+            tabControl1.Size = new Size(798, 767);
             tabControl1.TabIndex = 5;
             // 
             // filesTabPage
@@ -123,7 +131,7 @@
             filesTabPage.Location = new Point(4, 29);
             filesTabPage.Name = "filesTabPage";
             filesTabPage.Padding = new Padding(3);
-            filesTabPage.Size = new Size(985, 736);
+            filesTabPage.Size = new Size(790, 734);
             filesTabPage.TabIndex = 0;
             filesTabPage.Text = "Files";
             filesTabPage.UseVisualStyleBackColor = true;
@@ -166,6 +174,10 @@
             // 
             // treeViewTabPage
             // 
+            treeViewTabPage.Controls.Add(pg);
+            treeViewTabPage.Controls.Add(tbType);
+            treeViewTabPage.Controls.Add(lblType);
+            treeViewTabPage.Controls.Add(tbPgValue);
             treeViewTabPage.Controls.Add(rtbResponse);
             treeViewTabPage.Controls.Add(button2);
             treeViewTabPage.Controls.Add(treeView1);
@@ -173,24 +185,63 @@
             treeViewTabPage.Location = new Point(4, 29);
             treeViewTabPage.Name = "treeViewTabPage";
             treeViewTabPage.Padding = new Padding(3);
-            treeViewTabPage.Size = new Size(985, 736);
+            treeViewTabPage.Size = new Size(790, 734);
             treeViewTabPage.TabIndex = 1;
             treeViewTabPage.Text = "Tree View";
             treeViewTabPage.UseVisualStyleBackColor = true;
             // 
+            // pg
+            // 
+            pg.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pg.Location = new Point(480, 70);
+            pg.Name = "pg";
+            pg.Size = new Size(305, 285);
+            pg.TabIndex = 12;
+            pg.SelectedGridItemChanged += pg_SelectedGridItemChanged;
+            // 
+            // tbType
+            // 
+            tbType.Enabled = false;
+            tbType.Location = new Point(557, 37);
+            tbType.Name = "tbType";
+            tbType.Size = new Size(228, 27);
+            tbType.TabIndex = 11;
+            // 
+            // lblType
+            // 
+            lblType.AutoSize = true;
+            lblType.Location = new Point(479, 40);
+            lblType.Name = "lblType";
+            lblType.Size = new Size(43, 20);
+            lblType.TabIndex = 10;
+            lblType.Text = "Type:";
+            // 
+            // tbPgValue
+            // 
+            tbPgValue.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbPgValue.Enabled = false;
+            tbPgValue.Location = new Point(480, 361);
+            tbPgValue.Multiline = true;
+            tbPgValue.Name = "tbPgValue";
+            tbPgValue.ScrollBars = ScrollBars.Vertical;
+            tbPgValue.Size = new Size(306, 84);
+            tbPgValue.TabIndex = 9;
+            // 
             // rtbResponse
             // 
-            rtbResponse.Location = new Point(480, 125);
+            rtbResponse.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            rtbResponse.Location = new Point(480, 486);
             rtbResponse.Name = "rtbResponse";
-            rtbResponse.Size = new Size(499, 244);
+            rtbResponse.Size = new Size(305, 245);
             rtbResponse.TabIndex = 6;
             rtbResponse.Text = "";
             // 
             // button2
             // 
-            button2.Location = new Point(480, 90);
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            button2.Location = new Point(479, 451);
             button2.Name = "button2";
-            button2.Size = new Size(94, 29);
+            button2.Size = new Size(306, 29);
             button2.TabIndex = 5;
             button2.Text = "Get Value";
             button2.UseVisualStyleBackColor = true;
@@ -209,7 +260,7 @@
             tabPage1.Controls.Add(label3);
             tabPage1.Location = new Point(4, 29);
             tabPage1.Name = "tabPage1";
-            tabPage1.Size = new Size(985, 736);
+            tabPage1.Size = new Size(790, 734);
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Settings";
             tabPage1.UseVisualStyleBackColor = true;
@@ -293,9 +344,10 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(992, 768);
+            ClientSize = new Size(797, 768);
             Controls.Add(tabControl1);
             Margin = new Padding(3, 2, 3, 2);
+            MinimumSize = new Size(815, 815);
             Name = "Form1";
             Text = "Form1";
             tabControl1.ResumeLayout(false);
@@ -333,5 +385,10 @@
         private Label label4;
         private Label label3;
         private Button button3;
+        private Label label7;
+        private TextBox tbPgValue;
+        private TextBox tbType;
+        private Label lblType;
+        private PropertyGrid pg;
     }
 }
