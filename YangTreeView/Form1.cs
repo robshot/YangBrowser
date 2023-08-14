@@ -28,6 +28,8 @@ namespace YangTreeView
             tbPort.Text = Properties.Settings.Default.Port;
             tbUsername.Text = Properties.Settings.Default.Username;
             tbPassword.Text = Properties.Settings.Default.Password;
+            cbParseSubFolders.Checked = Properties.Settings.Default.SubFolder;
+            cbSkipVerify.Checked = Properties.Settings.Default.SkipVerify;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -38,7 +40,7 @@ namespace YangTreeView
             rtbParsedFiles.Text = String.Empty;
             rtbMissingFiles.Text = String.Empty;
             treeView1.Nodes.Clear();
-            parser = new YangParser(path);
+            parser = new YangParser(path, Properties.Settings.Default.SubFolder);
             rtbParsedFiles.Text = String.Join(Environment.NewLine, parser.Files.Select(x => x.Module));
             rtbMissingFiles.Text = String.Join(Environment.NewLine, parser.MissingImports);
             TreeViewParsing.FindNextForTreeView(treeView1, parser);
@@ -61,7 +63,17 @@ namespace YangTreeView
         private void button2_Click(object sender, EventArgs e)
         {
             string path = textBox2.Text;
-            var response = ExecuteWSLCommand(@$"gnmic -a {tbIp.Text}:{tbPort.Text} -u {tbUsername.Text} -p {tbPassword.Text} --insecure \get --path {path}");
+            List<string> options = new List<string>();
+            if (cbSkipVerify.Checked)
+            {
+                options.Add("--skip-verify");
+            }
+            else
+            {
+                options.Add("--insecure");
+            }
+
+            var response = ExecuteWSLCommand(@$"gnmic -a {tbIp.Text}:{tbPort.Text} -u {tbUsername.Text} -p {tbPassword.Text} {String.Join(" ", options)} \get --path {path}");
             rtbResponse.Text = response.Response == String.Empty ? response.Error : response.Response;
         }
 
@@ -144,6 +156,16 @@ namespace YangTreeView
         private void pg_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
         {
             tbPgValue.Text = Convert.ToString(e.NewSelection.Value);
+        }
+
+        private void cbParseSubFolders_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.SubFolder = cbParseSubFolders.Checked;
+        }
+
+        private void cbSkipVerify_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.SkipVerify = cbSkipVerify.Checked;
         }
     }
 }

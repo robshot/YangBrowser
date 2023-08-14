@@ -15,7 +15,7 @@ namespace YangTreeView.Yang
     {
         public string Dir { get; set; }
 
-        public string[] FilesDir { get; set; }
+        public List<string> FilesDir { get; set; }
 
         public List<YangFile> Files { get; set; }
 
@@ -27,7 +27,7 @@ namespace YangTreeView.Yang
 
         private bool isDir { get; set; }
 
-        public YangParser(string path)
+        public YangParser(string path, bool subFolders)
         {
             MissingImports = new List<string>();
             ImportFiles = new List<string>();
@@ -39,10 +39,19 @@ namespace YangTreeView.Yang
                 fileName = string.Empty;
             }
 
-            FilesDir = Directory.GetFiles(Dir);
+            FilesDir = Directory.GetFiles(Dir).ToList();
             Files = new List<YangFile>();
             if (string.IsNullOrWhiteSpace(fileName))
             {
+                if (subFolders)
+                {
+                    foreach (var subFolder in Directory.GetDirectories(Dir))
+                    {
+                        GetFiles(subFolder);
+                    }
+                }
+
+                FilesDir = FilesDir.Distinct().ToList();
                 isDir = true;
                 Parse(FilesDir.ToList());
             }
@@ -116,6 +125,15 @@ namespace YangTreeView.Yang
             if (leaf != null)
             {
                 return;
+            }
+        }
+
+        private void GetFiles(string path)
+        {
+            FilesDir.AddRange(Directory.GetFiles(path));
+            foreach (var subFolder in Directory.GetDirectories(path))
+            {
+                GetFiles(subFolder);
             }
         }
 
@@ -670,10 +688,10 @@ namespace YangTreeView.Yang
                         break;
 
                     case string s when s.StartsWith("prefix "):
-                        prefix = line.Split(' ')[1].Replace(";", string.Empty).Replace("\"", string.Empty);
+                        prefix = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1].Replace(";", string.Empty).Replace("\"", string.Empty);
                         yangFile.Prefix = prefix;
 
-                        if (line.Split(' ').Length > 2)
+                        if (line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length > 2)
                         {
                             MessageBox.Show("Prefix contains spaces! " + fillToProcess + "|" + line);
                         }

@@ -82,5 +82,29 @@ namespace YangTreeView.Properties {
                 this["Path"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SubFolder {
+            get {
+                return ((bool)(this["SubFolder"]));
+            }
+            set {
+                this["SubFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SkipVerify {
+            get {
+                return ((bool)(this["SkipVerify"]));
+            }
+            set {
+                this["SkipVerify"] = value;
+            }
+        }
     }
 }
